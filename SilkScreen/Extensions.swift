@@ -111,3 +111,9 @@ extension Comparable {
         return min(max(self, limits.lowerBound), limits.upperBound)
     }
 }
+
+extension Bundle {
+    private var CFBundleDisplayName: String? { object(forInfoDictionaryKey: "CFBundleDisplayName") as? String }
+    private var CFBundleName: String? { object(forInfoDictionaryKey: "CFBundleName") as? String }
+    var displayName: String? { self.CFBundleDisplayName ?? self.CFBundleName }
+}

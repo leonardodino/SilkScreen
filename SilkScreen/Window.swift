@@ -16,6 +16,14 @@ class Window: NSWindow {
         self.updateStyle()
     }
 
+    override var title: String {
+        get {
+            let filename = (windowController?.document as? Document)?.fileURL?.lastPathComponent
+            return filename ?? Bundle.main.displayName!
+        }
+        set {}
+    }
+
     convenience init() {
         self.init(contentViewController: ViewController(document: nil))
     }
@@ -38,7 +46,9 @@ class Window: NSWindow {
     
     func update(withDocument document: Document?) {
         self.hasDocument = document != nil
+        self.willChangeValue(for: \.title)
         self.contentViewController = ViewController(document: document)
+        self.didChangeValue(for: \.title)
         self.updateStyle()
     }
 }
