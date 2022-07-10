@@ -33,6 +33,11 @@ class Window: NSWindow {
     override var canBecomeKey: Bool { return true }
     override var canBecomeMain: Bool { return true }
     override var firstResponder: NSResponder? { return windowController }
+    override func makeKeyAndOrderFront(_ sender: Any?) {
+        NSApp.removeWindowsItem(self)
+        super.makeKeyAndOrderFront(sender)
+        NSApp.addWindowsItem(self, title: title, filename: false)
+    }
 
     private func updateStyle() {
         if self.hasDocument {
@@ -49,6 +54,7 @@ class Window: NSWindow {
         self.willChangeValue(for: \.title)
         self.contentViewController = ViewController(document: document)
         self.didChangeValue(for: \.title)
+        NSApp.changeWindowsItem(self, title: title, filename: false)
         self.updateStyle()
     }
 }
