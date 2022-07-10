@@ -37,6 +37,10 @@
 		96B4DAC1282F2C81005C0792 /* SilkScreen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SilkScreen.entitlements; sourceTree = "<group>"; };
 		96B72436283D976600F149DF /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		96B72438283D978E00F149DF /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		96B9AA5328789AA700175C2A /* xcode-build */ = {isa = PBXFileReference; lastKnownFileType = text; path = "xcode-build"; sourceTree = "<group>"; };
+		96B9AA5428789AA700175C2A /* get-scheme */ = {isa = PBXFileReference; lastKnownFileType = text; path = "get-scheme"; sourceTree = "<group>"; };
+		96B9AA5528789AA700175C2A /* generate-release-config */ = {isa = PBXFileReference; lastKnownFileType = text; path = "generate-release-config"; sourceTree = "<group>"; };
+		96B9AA562878A1AA00175C2A /* Default.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,7 @@
 			children = (
 				96B9AA4E2878994400175C2A /* Assets */,
 				96B9AA4F2878994F00175C2A /* Config */,
+				96B9AA5228789AA700175C2A /* Scripts */,
 				96B4DAB4282F2C80005C0792 /* Sources */,
 				96B4DAB3282F2C80005C0792 /* Products */,
 			);
@@ -105,11 +110,22 @@
 		96B9AA4F2878994F00175C2A /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				96B9AA562878A1AA00175C2A /* Default.xcconfig */,
 				96B4DAC0282F2C81005C0792 /* Info.plist */,
 				96B4DAC1282F2C81005C0792 /* SilkScreen.entitlements */,
 			);
 			path = Config;
 			sourceTree = "<group>";
+		};
+		96B9AA5228789AA700175C2A /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				96B9AA5328789AA700175C2A /* xcode-build */,
+				96B9AA5428789AA700175C2A /* get-scheme */,
+				96B9AA5528789AA700175C2A /* generate-release-config */,
+			);
+			path = Scripts;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -325,30 +341,25 @@
 		};
 		96B4DAC5282F2C81005C0792 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 96B9AA562878A1AA00175C2A /* Default.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/SilkScreen.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DA2W9THM7C;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Leonardo Dino\nAll rights reserved.";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.SilkScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -356,30 +367,25 @@
 		};
 		96B4DAC6282F2C81005C0792 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 96B9AA562878A1AA00175C2A /* Default.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/SilkScreen.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DA2W9THM7C;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Leonardo Dino\nAll rights reserved.";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.SilkScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = SilkScreen;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};

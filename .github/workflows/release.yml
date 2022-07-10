@@ -1,0 +1,132 @@
+name: Release
+
+on:
+  push: { tags: ['v[0-9]+.[0-9]+.[0-9]+'] }
+
+jobs:
+  release:
+    name: Xcode Build (Release)
+    runs-on: macos-12
+    steps:
+      - name: Select Xcode Version
+        run: sudo xcrun xcode-select -s /Applications/Xcode_13.4.1.app
+
+      - name: Set Environment Variables
+        run: |
+          APP_NAME="SilkScreen"
+          echo "APP_NAME=${APP_NAME}" >> $GITHUB_ENV
+
+          echo "XCARCHIVE_PATH=${PWD}/${APP_NAME}.xcarchive" >> $GITHUB_ENV
+          echo "APP_PATH=${PWD}/${APP_NAME}.xcarchive/Products/Applications/${APP_NAME}.app" >> $GITHUB_ENV
+          echo "ZIP_PATH=${RUNNER_TEMP}/${APP_NAME}.zip" >> $GITHUB_ENV
+
+          echo "BUILD_CERTIFICATE_PATH=${RUNNER_TEMP}/build_certificate.p12" >> $GITHUB_ENV
+          echo "NOTARIZATION_KEY_PATH=${RUNNER_TEMP}/notarization_key.p8" >> $GITHUB_ENV
+          echo "KEYCHAIN_PATH=${RUNNER_TEMP}/app-signing.keychain-db" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate Release Config
+        run: './Scripts/generate-release-config "${{ secrets.PRODUCT_BUNDLE_IDENTIFIER }}" "${GITHUB_REF_NAME#v}" "$GITHUB_RUN_NUMBER" "${{ secrets.XCODE_DEVELOPMENT_TEAM }}"'
+
+      - name: Install Developer ID Certificate
+        run: |
+          # import build certificate from secrets
+          echo -n "${{ secrets.BUILD_CERTIFICATE_BASE64 }}" | base64 --decode --output "$BUILD_CERTIFICATE_PATH"
+
+          # create temporary keychain
+          security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" "$KEYCHAIN_PATH"
+
+          # import certificate to keychain
+          security import "$BUILD_CERTIFICATE_PATH" -P "${{ secrets.P12_PASSWORD }}" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+
+          rm "$BUILD_CERTIFICATE_PATH"
+
+      - name: Run xcode-build Script
+        run: './Scripts/xcode-build release "$XCARCHIVE_PATH"'
+
+      - name: Notarize App
+        run: |
+          # Save Notarization Credentials to Keychain
+          echo -n "${{ secrets.NOTARIZATION_KEY_BASE64 }}" | base64 --decode --output "$NOTARIZATION_KEY_PATH"
+          xcrun notarytool store-credentials "AppNotarization" \
+            -k "$NOTARIZATION_KEY_PATH" \
+            -d "${{ secrets.NOTARIZATION_KEY_ID }}" \
+            -i "${{ secrets.NOTARIZATION_KEY_ISSUER }}" \
+            --keychain "$KEYCHAIN_PATH"
+
+          # create temporary .zip for notarization purposes
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_PATH"
+
+          # notarize the app and log the result to stdout
+          SUBMISSION_ID="$(xcrun notarytool submit "$ZIP_PATH" --keychain-profile "AppNotarization" | awk '$1 ~ /^id:$/ { id=$2 } END { print id }')"
+          xcrun notarytool wait "$SUBMISSION_ID" --keychain-profile "AppNotarization"
+          xcrun notarytool log "$SUBMISSION_ID" --keychain-profile "AppNotarization"
+
+          # staple .app bundle with the notarization ticket
+          xcrun stapler staple -vvv "$APP_PATH"
+
+          rm "$ZIP_PATH" "$NOTARIZATION_KEY_PATH"
+
+      - name: Validate .app bundle
+        run: |
+          xcrun stapler validate -vvv "$APP_PATH"
+          codesign --verify --deep --strict --verbose=1 "$APP_PATH"
+          spctl --assess --verbose --type open --type exec "$APP_PATH"
+
+      - name: Compress .app bundle
+        run: 'ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_PATH"'
+
+      - name: Upload App to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}
+          path: ${{ env.ZIP_PATH }}
+          if-no-files-found: error
+
+      - name: Upload Archive to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}.xcarchive
+          path: ${{ env.XCARCHIVE_PATH }}
+          if-no-files-found: error
+
+      - name: Check Git Status
+        run: git status --porcelain
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ZIP_PATH }}
+          asset_name: ${{ env.APP_NAME }}.zip
+          asset_content_type: application/zip
+
+      - name: Publish Release
+        run: "hub release edit --draft=false -m '' \"${GITHUB_REF_NAME}\""
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete keychain
+        if: ${{ always() }}
+        run: |
+          security delete-keychain "$KEYCHAIN_PATH"
+          rm -f "$BUILD_CERTIFICATE_PATH" "$NOTARIZATION_KEY_PATH" "$KEYCHAIN_PATH"

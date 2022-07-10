@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+RELEASE_CONFIG_PATH="${PWD}/Config/Release.xcconfig"
+SCHEME="$("$(dirname "$0")/get-scheme")"
+WORKSPACE="./${SCHEME}.xcodeproj/project.xcworkspace"
+
+USAGE="Usage:\n$(basename "$0") [release|build] [archive-path]"
+BUILD_TYPE="${1:-build}"
+ARCHIVE_PATH="${2:-"${PWD}/${SCHEME}.xcarchive"}"
+
+if [ "$BUILD_TYPE" == 'release' ]; then
+  if [ ! -f "$RELEASE_CONFIG_PATH" ]; then
+    echo "Error: Missing release config file" >&2
+    exit 1
+  fi
+  xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination "generic/platform=macOS" -archivePath "$ARCHIVE_PATH" -xcconfig "$RELEASE_CONFIG_PATH" archive
+elif [ "$BUILD_TYPE" == 'build' ]; then
+  xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination "generic/platform=macOS" -archivePath "$ARCHIVE_PATH" archive
+else
+  echo "Error: Invalid Build Type argument.
+  Received: \"${BUILD_TYPE}\"
+  Expected: one of [\"build\" | \"release\"]
+
+${USAGE}" >&2
+  exit 1
+fi

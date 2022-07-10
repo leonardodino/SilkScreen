@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+RELEASE_CONFIG_PATH="${PWD}/Config/Release.xcconfig"
+
+USAGE="Usage:
+  $(basename "$0") <bundle-id> <marketing-version> <build-version> <development-team>
+
+Where:
+  bundle-id:         App Bundle ID
+  marketing-version: Semantic Versioning
+  build-version:     Build Number (Integer)
+  development-team:  Apple Code-Signing Team ID"
+
+NUMBER_OF_EXPECTED_PARAMETERS=4
+PRODUCT_BUNDLE_IDENTIFIER="$1"
+MARKETING_VERSION="$2"
+CURRENT_PROJECT_VERSION="$3"
+DEVELOPMENT_TEAM="$4"
+
+if [ "$#" -ne "$NUMBER_OF_EXPECTED_PARAMETERS" ]; then
+  echo "Error: Invalid number of parameters
+  Expected: ${NUMBER_OF_EXPECTED_PARAMETERS} parameters
+  Received: $# parameters
+
+${USAGE}" >&2
+  exit 1
+fi
+
+if [[ ! "$MARKETING_VERSION" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+  echo "Error: Marketing Version argument must be a SemVer string
+  Received: \"${MARKETING_VERSION}\"
+
+${USAGE}" >&2
+  exit 1
+fi
+
+if [[ ! "$CURRENT_PROJECT_VERSION" =~ ^[0-9]+$ ]]; then
+  echo "Error: Build Number argument must be an Integer
+  Received: \"${CURRENT_PROJECT_VERSION}\"
+
+${USAGE}" >&2
+  exit 1
+fi
+
+if [[ ! "$DEVELOPMENT_TEAM" =~ ^[0-9A-Z]{8,12}$ ]]; then
+  echo "Error: Development Team argument must be valid
+  Received: \"${DEVELOPMENT_TEAM}\"
+
+${USAGE}" >&2
+  exit 1
+fi
+
+echo -n "PRODUCT_BUNDLE_IDENTIFIER = ${PRODUCT_BUNDLE_IDENTIFIER}
+
+CURRENT_PROJECT_VERSION = ${CURRENT_PROJECT_VERSION}
+MARKETING_VERSION = ${MARKETING_VERSION}
+VERSIONING_SYSTEM = apple-generic
+
+CODE_SIGN_IDENTITY = Developer ID Application
+CODE_SIGN_STYLE = Manual
+DEVELOPMENT_TEAM = ${DEVELOPMENT_TEAM}
+" | tee "$RELEASE_CONFIG_PATH"

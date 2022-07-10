@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [ -n "$SCHEME" ]; then
+  echo "$SCHEME"
+  exit 0
+fi
+
+get-scheme-count() {
+  python3 -c 'import json,sys;print(len(json.load(sys.stdin)["project"]["targets"]))' <<< "$1"
+}
+
+get-first-scheme() {
+  python3 -c 'import json,sys;print(json.load(sys.stdin)["project"]["targets"][0])' <<< "$1"
+}
+
+XCODEBUILD_LIST="$(xcodebuild -list -json 2> /dev/null)"
+[ "$(get-scheme-count "$XCODEBUILD_LIST")" -eq "1" ] || exit 1
+get-first-scheme "$XCODEBUILD_LIST"

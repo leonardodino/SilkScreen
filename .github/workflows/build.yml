@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push: { branches: ['main'] }
+  pull_request: { branches: ['main'] }
+
+jobs:
+  build:
+    name: Xcode Build
+    runs-on: macos-12
+    steps:
+      - name: Select Xcode Version
+        run: sudo xcrun xcode-select -s /Applications/Xcode_13.4.1.app
+
+      - name: Set Environment Variables
+        run: |
+          APP_NAME="SilkScreen"
+          echo "APP_NAME=${APP_NAME}" >> $GITHUB_ENV
+          echo "XCARCHIVE_PATH=${PWD}/${APP_NAME}.xcarchive" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run xcode-build Script
+        run: './Scripts/xcode-build build "$XCARCHIVE_PATH"'
+
+      - name: Upload Archive to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}.xcarchive
+          path: ${{ env.XCARCHIVE_PATH }}
+          if-no-files-found: error
+
+      - name: Check Git Status
+        run: git status --porcelain

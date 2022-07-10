@@ -1,0 +1,4 @@
+xcuserdata/
+*.xcarchive
+*.zip
+Release.xcconfig
