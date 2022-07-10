@@ -1,6 +1,8 @@
 import Cocoa
 
 class WindowController: NSWindowController, NSWindowDelegate {
+    var previousAlpha: CGFloat = 1
+
     convenience init(document: Document?) {
         self.init(window: Window())
         self.shouldCloseDocument = true
@@ -59,8 +61,16 @@ class WindowController: NSWindowController, NSWindowDelegate {
         }
     }
 
+    func windowWillMiniaturize(_ notification: Notification) {
+        guard let window = window else { return }
+        self.previousAlpha = window.alphaValue
+        window.alphaValue = 1
+    }
+
     func windowDidDeminiaturize(_ notification: Notification) {
-        self.window?.invalidateShadow()
+        guard let window = window else { return }
+        window.invalidateShadow()
+        DispatchQueue.main.async { window.alphaValue = self.previousAlpha }
     }
 
     func windowWillClose(_ notification: Notification) {
