@@ -18,15 +18,15 @@ class Window: NSWindow {
         self.showsResizeIndicator = false
         self.standardWindowButton(.miniaturizeButton)?.isHidden = true
         self.standardWindowButton(.zoomButton)?.isHidden = true
-        self.styleMask.formUnion(.fullSizeContentView)
-        self.styleMask.remove(.resizable)
-        // borderless advantages: square borders, no need to hide buttons
-        // borderless issues: breaks default close/minimize/window menu/etc
-        // self.styleMask = [.borderless]
+        self.styleMask = [.borderless, .fullSizeContentView, .miniaturizable, .closable]
 
         self.updateStyle()
     }
-    
+
+    override var canBecomeKey: Bool { return true }
+    override var canBecomeMain: Bool { return true }
+    override var firstResponder: NSResponder? { return self.windowController }
+
     private func updateStyle() {
         if hasDocument {
             self.standardWindowButton(.closeButton)?.isHidden = true

@@ -15,7 +15,15 @@ class WindowController: NSWindowController, NSWindowDelegate {
         if (newAlpha < 0.1) {newAlpha = 0.1}
         self.window?.alphaValue = newAlpha
     }
-    
+
+    @objc func performClose(_ sender: Any) {
+        self.window?.close()
+    }
+
+    @objc func performMiniaturize(_ sender: Any) {
+        self.window?.miniaturize(sender)
+    }
+
     func update(withDocument document: Document?) {
         if document == nil && self.document == nil { return }
         guard let window = window as? Window else { return }
@@ -37,6 +45,10 @@ class WindowController: NSWindowController, NSWindowDelegate {
         if (contentViewController as? ViewController)?.document != nil {
             window?.ignoresMouseEvents = true
         }
+    }
+
+    func windowDidDeminiaturize(_ notification: Notification) {
+        self.window?.invalidateShadow()
     }
 
     func windowWillClose(_ notification: Notification) {

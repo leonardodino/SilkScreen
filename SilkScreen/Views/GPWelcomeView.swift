@@ -1,6 +1,21 @@
 import Cocoa
 
 final class GPWelcomeView: BaseDragDropView {
+    private lazy var closeButton: NSView = {
+        let size: CGFloat = 11
+        let margin = 10
+
+        let image = NSImage(systemSymbolName: "xmark", accessibilityDescription: nil)!
+            .withSymbolConfiguration(.init(pointSize: size, weight: .bold))!
+        let action = #selector(NSWindow.performClose(_:))
+        let view = NSButton(image: image, target: window, action: action)
+        view.setAccessibilityLabel("Close window")
+        view.isBordered = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setFrameOrigin(.init(x: 0 + margin, y: Int(frame.height - image.size.height) - margin))
+        return view
+    }()
+
     private lazy var iconImageView: NSView = {
         let view = BaseImageView(image:
             NSImage(systemSymbolName: "arrow.down.circle", accessibilityDescription: nil)!
@@ -37,6 +52,7 @@ final class GPWelcomeView: BaseDragDropView {
 
     convenience init() {
         self.init(frame: NSMakeRect(0.0, 0.0, 480, 400))
+        self.addSubview(closeButton)
         self.addSubview(stackView)
         self.translatesAutoresizingMaskIntoConstraints = false
     }
