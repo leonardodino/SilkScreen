@@ -1,6 +1,7 @@
 import Cocoa
 
 class Window: NSWindow {
+    override class var allowsAutomaticWindowTabbing: Bool { get { return false } set {} }
     var hasDocument = false
 
     convenience init() {

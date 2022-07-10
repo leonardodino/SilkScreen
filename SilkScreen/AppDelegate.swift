@@ -31,7 +31,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        NSWindow.allowsAutomaticWindowTabbing = false
         window.makeKeyAndOrderFront(self)
     }
 
