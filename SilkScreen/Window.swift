@@ -1,8 +1,10 @@
 import Cocoa
 
-class DocumentWindow: NSWindow {
-    convenience init(document: Document?){
-        self.init(contentViewController: ViewController(document: document))
+class Window: NSWindow {
+    var hasDocument = false
+
+    convenience init() {
+        self.init(contentViewController: ViewController(document: nil))
 
         self.isOpaque = false
         self.isMovable = true
@@ -14,23 +16,37 @@ class DocumentWindow: NSWindow {
         self.tabbingMode = .disallowed
 
         self.showsResizeIndicator = false
-        self.standardWindowButton(.closeButton)?.isHidden = document != nil
         self.standardWindowButton(.miniaturizeButton)?.isHidden = true
         self.standardWindowButton(.zoomButton)?.isHidden = true
         self.styleMask.formUnion(.fullSizeContentView)
         self.styleMask.remove(.resizable)
-        
-        
-        if document != nil {
-            self.backgroundColor = .clear
-            self.level = .floating
-            self.collectionBehavior = [.fullScreenNone, .managed]
-        }
-        
         // borderless advantages: square borders, no need to hide buttons
         // borderless issues: breaks default close/minimize/window menu/etc
         // self.styleMask = [.borderless]
+
+        self.updateStyle()
+    }
+    
+    private func updateStyle() {
+        if hasDocument {
+            self.standardWindowButton(.closeButton)?.isHidden = true
+            self.backgroundColor = .clear
+            self.level = .floating
+            self.collectionBehavior = [.fullScreenNone, .managed]
+        } else {
+            self.standardWindowButton(.closeButton)?.isHidden = false
+            self.backgroundColor = .windowBackgroundColor
+            self.level = .normal
+            self.collectionBehavior = []
+        }
+    }
+    
+    func update(withDocument document: Document?) {
+        hasDocument = document != nil
+        self.updateStyle()
+        self.contentViewController = ViewController(document: document)
     }
     
     override var isZoomable: Bool {return false}
+    override var isResizable: Bool {return false}
 }

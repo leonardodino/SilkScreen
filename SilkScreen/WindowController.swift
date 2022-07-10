@@ -1,8 +1,9 @@
 import Cocoa
 
-class DocumentWindowController: NSWindowController, NSWindowDelegate {
+class WindowController: NSWindowController, NSWindowDelegate {
     convenience init(document: Document?) {
-        self.init(window: DocumentWindow(document: document))
+        self.init(window: Window())
+        self.shouldCloseDocument = true
         self.window!.delegate = self
     }
 
@@ -15,7 +16,18 @@ class DocumentWindowController: NSWindowController, NSWindowDelegate {
         self.window?.alphaValue = newAlpha
     }
     
-    override var shouldCloseDocument: Bool { set {} get { return true } }
+    func update(withDocument document: Document?) {
+        if document == nil && self.document == nil { return }
+        guard let window = window as? Window else { return }
+
+        if let previous = self.document as? NSDocument {
+            previous.removeWindowController(self)
+            previous.close()
+        }
+
+        document?.addWindowController(self)
+        window.update(withDocument: document)
+    }
     
     func windowDidBecomeMain(_ notification: Notification) {
         window?.ignoresMouseEvents = false
@@ -25,5 +37,9 @@ class DocumentWindowController: NSWindowController, NSWindowDelegate {
         if (contentViewController as? ViewController)?.document != nil {
             window?.ignoresMouseEvents = true
         }
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        update(withDocument: nil)
     }
 }

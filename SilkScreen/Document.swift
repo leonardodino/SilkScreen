@@ -9,8 +9,7 @@ class Document: NSDocument {
     override var isDocumentEdited: Bool { return false }
     
     override func makeWindowControllers() {
-        NSApp.windows.forEach { ($0 as? DocumentWindow)?.close() }
-        self.addWindowController(DocumentWindowController(document: self))
+        (NSApp.delegate as? AppDelegate)!.windowController.update(withDocument: self)
     }
     
     override func data(ofType typeName: String) throws -> Data {
