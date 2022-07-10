@@ -24,6 +24,21 @@ class WindowController: NSWindowController, NSWindowDelegate {
         self.window?.miniaturize(sender)
     }
 
+    @objc func paste(_ sender: Any) {
+        if let fileURL = NSPasteboard.general.getImageFileURL() {
+            NSDocumentController.shared.openDocument(withContentsOf: fileURL, display: true){_,_,_ in }
+        } else if let imageData = NSPasteboard.general.getImageData() {
+            _ = NSDocumentController.shared.openDocumentFromData(imageData, ofType: "public.image")
+        }
+    }
+
+    override func responds(to selector: Selector!) -> Bool {
+        if selector == #selector(paste(_:)) {
+            return NSPasteboard.general.hasImageFileURL() || NSPasteboard.general.hasImageData()
+        }
+        return super.responds(to: selector)
+    }
+
     func update(withDocument document: Document?) {
         if document == nil && self.document == nil { return }
         guard let window = window as? Window else { return }

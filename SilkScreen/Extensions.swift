@@ -64,3 +64,44 @@ extension NSSize {
         return height.isLess(than: dimension) || width.isLess(than: dimension)
     }
 }
+
+extension NSPasteboard {
+    func hasImageData() -> Bool {
+        return self.canReadItem(withDataConformingToTypes: ["public.image"])
+    }
+
+    func getImageData() -> Data? {
+        guard let types = self.types else { return nil }
+        if types.contains(.png) { return self.data(forType: .png) }
+        if types.contains(.tiff) { return self.data(forType: .tiff) }
+        return nil
+    }
+
+    func hasImageFileURL() -> Bool {
+        let options: [NSPasteboard.ReadingOptionKey: Any] = [.urlReadingContentsConformToTypes: ["public.image"], .urlReadingFileURLsOnly: true]
+        return self.canReadObject(forClasses: [NSURL.self], options: options)
+    }
+
+    func getImageFileURL() -> URL? {
+        guard self.types?.contains(.fileURL) == true else { return nil }
+        guard let fileUrlString = self.propertyList(forType: .fileURL) as? String else { return nil }
+        guard let fileUrl = URL(string: fileUrlString) else { return nil }
+        guard fileUrl.isFileURL == true else { return nil }
+        return fileUrl
+    }
+}
+
+extension NSDocumentController {
+    func openDocumentFromData(_ data: Data, ofType type: String) -> Bool {
+        guard let document = try? self.makeUntitledDocument(ofType: type) else { return false }
+        do {
+            try document.read(from: data, ofType: type)
+            self.addDocument(document)
+            document.makeWindowControllers()
+            return true
+        } catch {
+            document.close()
+            return false
+        }
+    }
+}
