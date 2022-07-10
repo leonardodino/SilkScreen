@@ -43,9 +43,17 @@ class Window: NSWindow {
         if self.hasDocument {
             self.backgroundColor = .clear
             self.level = .floating
+            self.hasShadow = false
+
+            // hack: removing shadow leaves it on screen
+            // force window to redraw to get rid of glitch
+            self.orderOut(self)
+            DispatchQueue.main.async { self.orderFront(self) }
         } else {
+            self.alphaValue = 1
             self.backgroundColor = .windowBackgroundColor
             self.level = .normal
+            self.hasShadow = true
         }
     }
     
