@@ -8,12 +8,9 @@ class WindowController: NSWindowController, NSWindowDelegate {
     }
 
     override func scrollWheel(with event: NSEvent) {
-        guard let alphaValue = self.window?.alphaValue else { return }
-        
-        var newAlpha = alphaValue + (event.deltaY/50)
-        if (newAlpha > 1) {newAlpha = 1}
-        if (newAlpha < 0.1) {newAlpha = 0.1}
-        self.window?.alphaValue = newAlpha
+        guard let window = self.window else { return }
+        let nextAlpha = window.alphaValue + (event.deltaY/50)
+        window.alphaValue = nextAlpha.clamped(to: 0.1...1)
     }
 
     @objc func performClose(_ sender: Any) {
