@@ -4,50 +4,41 @@ class Window: NSWindow {
     override class var allowsAutomaticWindowTabbing: Bool { get { return false } set {} }
     var hasDocument = false
 
-    convenience init() {
-        self.init(contentViewController: ViewController(document: nil))
-
+    override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
+        super.init(contentRect: contentRect, styleMask: [.borderless, .miniaturizable, .closable], backing: backingStoreType, defer: flag)
         self.isOpaque = false
         self.isMovable = true
-        self.isDocumentEdited = false
-        self.isMovableByWindowBackground = true
-        self.titlebarAppearsTransparent = true
-        self.titleVisibility = .hidden
         self.isRestorable = false
-        self.tabbingMode = .disallowed
-
+        self.isDocumentEdited = false
         self.showsResizeIndicator = false
-        self.standardWindowButton(.miniaturizeButton)?.isHidden = true
-        self.standardWindowButton(.zoomButton)?.isHidden = true
-        self.styleMask = [.borderless, .fullSizeContentView, .miniaturizable, .closable]
-
+        self.isMovableByWindowBackground = true
+        self.collectionBehavior = [.fullScreenNone, .managed]
         self.updateStyle()
     }
 
+    convenience init() {
+        self.init(contentViewController: ViewController(document: nil))
+    }
+
+    override var isZoomable: Bool { return false }
+    override var isResizable: Bool { return false }
     override var canBecomeKey: Bool { return true }
     override var canBecomeMain: Bool { return true }
-    override var firstResponder: NSResponder? { return self.windowController }
+    override var firstResponder: NSResponder? { return windowController }
 
     private func updateStyle() {
-        if hasDocument {
-            self.standardWindowButton(.closeButton)?.isHidden = true
+        if self.hasDocument {
             self.backgroundColor = .clear
             self.level = .floating
-            self.collectionBehavior = [.fullScreenNone, .managed]
         } else {
-            self.standardWindowButton(.closeButton)?.isHidden = false
             self.backgroundColor = .windowBackgroundColor
             self.level = .normal
-            self.collectionBehavior = []
         }
     }
     
     func update(withDocument document: Document?) {
-        hasDocument = document != nil
-        self.updateStyle()
+        self.hasDocument = document != nil
         self.contentViewController = ViewController(document: document)
+        self.updateStyle()
     }
-    
-    override var isZoomable: Bool {return false}
-    override var isResizable: Bool {return false}
 }
