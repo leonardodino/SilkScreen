@@ -64,7 +64,9 @@
 		96B4DAA9282F2C80005C0792 = {
 			isa = PBXGroup;
 			children = (
-				96B4DAB4282F2C80005C0792 /* SilkScreen */,
+				96B9AA4E2878994400175C2A /* Assets */,
+				96B9AA4F2878994F00175C2A /* Config */,
+				96B4DAB4282F2C80005C0792 /* Sources */,
 				96B4DAB3282F2C80005C0792 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,7 +79,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		96B4DAB4282F2C80005C0792 /* SilkScreen */ = {
+		96B4DAB4282F2C80005C0792 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				964B527B2847DAA1005FB0CF /* Views */,
@@ -87,12 +89,26 @@
 				96B4DAB9282F2C80005C0792 /* Document.swift */,
 				96B72436283D976600F149DF /* Window.swift */,
 				965B9EAF2841687B006FBA63 /* Extensions.swift */,
-				96B4DABB282F2C81005C0792 /* Assets.xcassets */,
 				96B4DABD282F2C81005C0792 /* Main.storyboard */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		96B9AA4E2878994400175C2A /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				96B4DABB282F2C81005C0792 /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		96B9AA4F2878994F00175C2A /* Config */ = {
+			isa = PBXGroup;
+			children = (
 				96B4DAC0282F2C81005C0792 /* Info.plist */,
 				96B4DAC1282F2C81005C0792 /* SilkScreen.entitlements */,
 			);
-			path = SilkScreen;
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,7 +328,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SilkScreen/SilkScreen.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Config/SilkScreen.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -320,7 +336,7 @@
 				DEVELOPMENT_TEAM = DA2W9THM7C;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SilkScreen/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
@@ -343,7 +359,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SilkScreen/SilkScreen.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Config/SilkScreen.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -351,7 +367,7 @@
 				DEVELOPMENT_TEAM = DA2W9THM7C;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SilkScreen/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
