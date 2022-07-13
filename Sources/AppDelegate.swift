@@ -38,4 +38,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         newDocument(self)
         return true
     }
+
+    @IBAction func showHelp(_ sender: Any?) {
+        if let url = URL(string: "https://github.com/leonardodino/SilkScreen") {
+            NSWorkspace.shared.open(url)
+        }
+    }
 }
