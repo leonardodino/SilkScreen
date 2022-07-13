@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		961CD236287F733400E4110B /* AboutWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961CD235287F733400E4110B /* AboutWindow.swift */; };
 		964B527D2847DAF9005FB0CF /* BaseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964B527C2847DAF9005FB0CF /* BaseImageView.swift */; };
 		964B527F2847DB84005FB0CF /* BaseDragDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964B527E2847DB84005FB0CF /* BaseDragDropView.swift */; };
 		964B52812847DBFC005FB0CF /* GPWelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964B52802847DBFC005FB0CF /* GPWelcomeView.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		961CD235287F733400E4110B /* AboutWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutWindow.swift; sourceTree = "<group>"; };
 		964B527C2847DAF9005FB0CF /* BaseImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseImageView.swift; sourceTree = "<group>"; };
 		964B527E2847DB84005FB0CF /* BaseDragDropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseDragDropView.swift; sourceTree = "<group>"; };
 		964B52802847DBFC005FB0CF /* GPWelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPWelcomeView.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				96B72438283D978E00F149DF /* WindowController.swift */,
 				96B4DAB9282F2C80005C0792 /* Document.swift */,
 				96B72436283D976600F149DF /* Window.swift */,
+				961CD235287F733400E4110B /* AboutWindow.swift */,
 				965B9EAF2841687B006FBA63 /* Extensions.swift */,
 				96B4DABD282F2C81005C0792 /* Main.storyboard */,
 			);
@@ -203,6 +206,7 @@
 				96B72439283D978E00F149DF /* WindowController.swift in Sources */,
 				96B4DAB6282F2C80005C0792 /* AppDelegate.swift in Sources */,
 				96B4DABA282F2C80005C0792 /* Document.swift in Sources */,
+				961CD236287F733400E4110B /* AboutWindow.swift in Sources */,
 				964B52832847DC26005FB0CF /* GPImageView.swift in Sources */,
 				965B9EB02841687B006FBA63 /* Extensions.swift in Sources */,
 				964B527F2847DB84005FB0CF /* BaseDragDropView.swift in Sources */,

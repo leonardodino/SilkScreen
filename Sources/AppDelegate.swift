@@ -39,6 +39,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
+    @IBAction func showAbout(_ sender: Any?) {
+        AboutWindow.shared.show()
+    }
     @IBAction func showHelp(_ sender: Any?) {
         if let url = URL(string: "https://github.com/leonardodino/SilkScreen") {
             NSWorkspace.shared.open(url)
