@@ -17,7 +17,7 @@ spiritual successor of [**GluePrint**](https://web.archive.org/web/2016111409224
 4. tweak your code until it matches the mockup
 
 
-&emsp;&rarr;&ensp;still in doubt? [watch the original demo of GluePrint](https://vimeo.com/727110374)
+&emsp;&rarr;&ensp;still in doubt? [watch the original demo of GluePrint](https://vimeo.com/78350251)
 
 <details>
 <summary><b>for other actions use native macOS keybindings</b> [click to expand]</summary>
